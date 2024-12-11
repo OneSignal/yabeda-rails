@@ -41,7 +41,6 @@ You always can add support for your app server to [lib/yabeda/rails/railtie.rb](
 
  - Total web requests received: `rails_requests_total`
  - Web request duration: `rails_request_duration` (in seconds)
- - DB request duration: `rails_db_runtime` (in seconds)
 
 
 ## Hooks
