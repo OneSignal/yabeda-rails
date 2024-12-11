@@ -12,7 +12,7 @@ module Yabeda
   module Rails
     LONG_RUNNING_REQUEST_BUCKETS = [
       0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10, # standard
-      30, 60, 120, 300, 600, # Sometimes requests may be really long-running
+      30, 60, # We timeout requests at 100s. Requests taking more than 60s will end up in the Infinity bucket
     ].freeze
 
     class << self
@@ -40,10 +40,6 @@ module Yabeda
                                        buckets: LONG_RUNNING_REQUEST_BUCKETS,
                                        comment: "A histogram of the response latency."
 
-          histogram :db_runtime, unit: :seconds, buckets: LONG_RUNNING_REQUEST_BUCKETS,
-                                 comment: "A histogram of the activerecord execution time.",
-                                 tags: %i[controller action status format method]
-
           if config.apdex_target
             gauge :apdex_target, unit: :seconds,
                                  comment: "Tolerable time for Apdex (T value: maximum duration of satisfactory request)"
@@ -55,7 +51,6 @@ module Yabeda
 
             rails_requests_total.increment(event.labels)
             rails_request_duration.measure(event.labels, event.duration)
-            rails_db_runtime.measure(event.labels, event.db_runtime)
 
             Yabeda::Rails.controller_handlers.each do |handler|
               handler.call(event, event.labels)

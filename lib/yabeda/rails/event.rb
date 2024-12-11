@@ -21,10 +21,6 @@ module Yabeda
         ms2s super
       end
 
-      def db_runtime
-        ms2s payload[:db_runtime]
-      end
-
       private
 
       def controller
