@@ -12,7 +12,7 @@ module Yabeda
   module Rails
     LONG_RUNNING_REQUEST_BUCKETS = [
       0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10, # standard
-      30, 60, 120, 300, 600, # Sometimes requests may be really long-running
+      30, 60, # We timeout requests at 100s. Requests taking more than 60s will end up in the Infinity bucket
     ].freeze
 
     class << self
